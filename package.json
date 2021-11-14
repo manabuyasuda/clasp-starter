@@ -4,9 +4,9 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "build": "rimraf dist && webpack && cpx src/appsscript.json dist",
-    "push": "npm run build && clasp push",
-    "lint": "eslint --fix src/**/*.js"
+    "lint": "eslint --fix src/**/*.js",
+    "build": "npm run lint && rimraf dist && webpack && cpx src/appsscript.json dist",
+    "push": "npm run build && clasp push"
   },
   "author": "manabuyasuda",
   "license": "MIT",
