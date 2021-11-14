@@ -2,11 +2,82 @@
 [google/clasp](https://github.com/google/clasp)でGoogle Apps Script（GAS）を開発するためのテンプレートです。
 
 ## 始め方
+### clasp CLIをインストール
+※インストール済みの場合はスキップしてください
+
+CLIをグローバルにインストールします。
+
+```
+npm install -g @google/clasp
+```
+
+[Apps Scriptの設定画面](https://script.google.com/home/usersettings)に移動します。
+「Google Apps Script API」を選択、チェックボックスをオンにしてください。
+
+ユーザー認証します。
+以下を実行後、アカウントの選択、「許可」を実行してください。
+
+```
+clasp login
+```
+
+ブラウザに`Logged in! You may close this page.` と表示され、ターミナルに`Authorization successful.`と表示されたら完了です。
+`/Users/ユーザー名/.clasprc.json.`が生成されているはずです。
+
+### スプレッドシートとGASの準備
+GASと連携するスプレッドシートを作成します。
+「ツール」から「スクリプトエディタ」を開きます。
+
+スクリプトエディタから`scriptId`を、どちらかの方法でコピーしておきます。
+
+- GASのURL（`https://script.google.com/home/projects/XXX/edit`）の`XXX`部分をコピー
+- GASの「プロジェクトの設定」から「スクリプトID」をコピー
+
+### リポジトリの作成
+「clasp-starter」を使うリポジトリをクローン、リポジトリのルートに移動してください。
+
+以下のコマンドを実行します。
+
+```
+git clone --depth=1 git@github.com:manabuyasuda/clasp-starter.git && cd clasp-starter && rm -rf .git && mv * .[^\.]* ../ && cd ../ && rm -r clasp-starter
+```
+
+以下の処理を実行しています。
+
+1. 「clasp-starter」をシャロークローン
+2. 「clasp-starter」に移動して、`.git`を削除
+3. 「clasp-starter」内にあるファイル一式を1階層上に移動
+4. リポジトリのルートに戻って、「clasp-starter」を削除
+
+`clasp.json`を開いて、`scriptId`にペーストします。
+
+```
+{
+  "scriptId": "<your_script_id>",
+  "rootDir": "dist"
+}
+```
+
+### パッケージのインストール
 パッケージをインストールします。
 
 ```
 npm ci
 ```
+
+### GASにプッシュ
+以下のスクリプトでGASにプッシュされます。
+
+```
+npm run push
+```
+
+プッシュ前に、ESLintとJSのビルドが実行されます。
+個別に確認したい場合は、以下のスクリプトを実行してください。
+
+- ESLint： `npm run lint`
+- JSのビルド： `npm run build`
+
 
 ## ファイル構成
 
@@ -28,25 +99,10 @@ npm ci
 └── webpack.config.js
 ```
 
-### .clasp.json
-[`scriptId`](https://github.com/google/clasp#scriptid-required)を指定してください。
-
-```
-{
-  "scriptId": "<your_script_id>",
-  "rootDir": "dist"
-}
-```
-
-`scriptId`は、いずれかから取得できます。
-
-- GASのURL（`https://script.google.com/home/projects/XXX/edit`）の`XXX`部分をコピー
-- GASの「プロジェクトの設定」から「スクリプトID」をコピー
-
 ### src/main.js
 `main.js`がエンドポイントになります。
 
-以下のように、必ず`global`オブジェクトとして出力してください。
+以下のように、必ず`global`オブジェクトとして出力してください（実行できなくなります）。
 
 ```
 const func = () => {
@@ -71,27 +127,4 @@ global.func = func
 
 ### dist
 GASにプッシュされるファイルです。
-`src/appsscript.json`とバンドルされるファイル（`bundle.js`）が出力されます。
-
-## タスク
-### `npm run build
-GASにプッシュするファイルをビルドします。
-
-```
-"build": "rimraf dist && webpack && cpx src/appsscript.json dist",
-```
-
-### `npm run lint`
-ESLintを実行します。
-[JavaScript Standard Style](https://standardjs.com/readme-ja.html)と[Prettier](https://prettier.io/)が反映されます。
-
-```
-"lint": "eslint --fix src/**/*.js"
-```
-
-### `npm run push`
-ファイルをビルド後、GASにプッシュします。
-
-```
-"push": "npm run build && clasp push",
-```
+`src/appsscript.json`と、`src/main.js`からバンドルされるファイル（`bundle.js`）が出力されます。
