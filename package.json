@@ -1,0 +1,28 @@
+{
+  "name": "clasp-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "rimraf dist && webpack && cpx src/appsscript.json dist",
+    "push": "npm run build && clasp push",
+    "lint": "eslint --fix src/**/*.js"
+  },
+  "author": "manabuyasuda",
+  "license": "MIT",
+  "dependencies": {
+    "cpx": "^1.5.0",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.1.1",
+    "gas-webpack-plugin": "^2.1.0",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.1"
+  }
+}
